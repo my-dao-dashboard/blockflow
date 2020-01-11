@@ -1,0 +1,12 @@
+[Unit]
+Description=Notify HTTP endpoint on new blocks
+
+[Service]
+Requires=geth
+Type=simple
+Restart=always
+EnvironmentFile=/opt/blockflow/config.env
+ExecStart=/opt/blockflow/blockflow-linux
+
+[Install]
+WantedBy=multi-user.target

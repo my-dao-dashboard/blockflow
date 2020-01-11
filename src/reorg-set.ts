@@ -1,21 +1,30 @@
-type BlockNumber = number;
 type BlockHash = string;
+type BlockNumber = number;
+
+interface BlockInfo {
+  totalDifficulty: number;
+  blockHash: BlockHash;
+}
 
 export class ReorgSet {
-  private items = new Map<BlockNumber, BlockHash>();
+  private items = new Map<number, BlockInfo>();
 
-  constructor(readonly maxLength: number = 10) {}
+  constructor(readonly maxSize: number = 20) {}
 
-  has(id: BlockNumber): boolean {
-    return this.items.has(id);
+  has(blockNumber: BlockNumber) {
+    return this.items.has(blockNumber);
   }
 
-  add(id: BlockNumber, hash: BlockHash) {
-    this.items.set(id, hash);
-    const allNumbers = Array.from(this.items.keys()).sort();
-    if (allNumbers.length > this.maxLength) {
-      const earliest = allNumbers[0];
-      this.items.delete(earliest);
+  add(blockNumber: BlockNumber, blockHash: BlockHash, totalDifficulty: number) {
+    this.items.set(blockNumber, { blockHash, totalDifficulty: totalDifficulty });
+    this.cleanup();
+  }
+
+  cleanup() {
+    const currentSize = this.items.size;
+    if (currentSize > this.maxSize) {
+      const oldest = Array.from(this.items.keys()).sort()[0];
+      this.items.delete(oldest);
     }
   }
 }
