@@ -6,7 +6,7 @@ import { ReorgSet } from "./reorg-set";
 import axios from "axios";
 import axiosRetry from "axios-retry";
 
-axiosRetry(axios, { retries: 5, retryCondition: () => true });
+axiosRetry(axios, { retries: 10, retryCondition: () => true, retryDelay: (retryCount: number) => retryCount * 100 });
 
 export class BlockFlow {
   private readonly reorgSet = new ReorgSet();
@@ -33,9 +33,9 @@ export class BlockFlow {
     const blockHash = blockHeader.hash;
     const isSeen = this.reorgSet.has(blockNumber);
     if (isSeen) {
-      console.log(`Block ${blockNumber}: ${blockHash} REORG`);
+      console.log(`Block ${blockNumber}: ${this.config.name}: ${blockHash} REORG`);
     } else {
-      console.log(`Block ${blockNumber}: ${blockHash}`);
+      console.log(`Block ${blockNumber}: ${this.config.name}: ${blockHash}`);
     }
     await this.notifySinks(blockNumber, blockHash);
   }
