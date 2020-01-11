@@ -1,0 +1,9 @@
+{
+  "main": {
+    "endpoint": "ws://mainnet.eth.daoscan.net:8546",
+    "sinks": [
+      "https://dev.daoscan.net/block",
+      "https://daoscan.net/block"
+    ]
+  }
+}

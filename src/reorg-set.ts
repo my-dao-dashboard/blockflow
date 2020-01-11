@@ -1,13 +1,8 @@
 type BlockHash = string;
 type BlockNumber = number;
 
-interface BlockInfo {
-  totalDifficulty: number;
-  blockHash: BlockHash;
-}
-
 export class ReorgSet {
-  private items = new Map<number, BlockInfo>();
+  private items = new Map<number, BlockHash>();
 
   constructor(readonly maxSize: number = 20) {}
 
@@ -15,8 +10,8 @@ export class ReorgSet {
     return this.items.has(blockNumber);
   }
 
-  add(blockNumber: BlockNumber, blockHash: BlockHash, totalDifficulty: number) {
-    this.items.set(blockNumber, { blockHash, totalDifficulty: totalDifficulty });
+  add(blockNumber: BlockNumber, blockHash: BlockHash) {
+    this.items.set(blockNumber, blockHash);
     this.cleanup();
   }
 
